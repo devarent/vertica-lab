@@ -1,0 +1,17 @@
+CREATE SCHEMA IF NOT EXISTS lab;
+
+CREATE TABLE IF NOT EXISTS lab.sales (
+    sale_id IDENTITY,
+    customer_id INT,
+    amount NUMERIC(12,2),
+    sold_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+ORDER BY customer_id
+SEGMENTED BY HASH(customer_id) ALL NODES;
+
+CREATE PROJECTION IF NOT EXISTS lab.sales_super
+AS SELECT * FROM lab.sales
+ORDER BY customer_id
+SEGMENTED BY HASH(customer_id) ALL NODES;
+
+SELECT REFRESH('');
